@@ -78,6 +78,15 @@ impl Tuple {
         }
     }
 
+    pub fn multiply_by(&self, scalar: f64) -> Self {
+        Tuple {
+            x: self.x * scalar,
+            y: self.y * scalar,
+            z: self.z * scalar,
+            w: self.w * scalar
+        }
+    }
+
 }
 
 mod tests {
@@ -191,6 +200,13 @@ mod tests {
 
         assert_eq!(tuple_2, Tuple::new_point(2.0, -3.0, 1.2));
         assert_eq!(tuple_2.get_type(), TupleType::Point);
+    }
+
+    #[test]
+    fn test_multiply() {
+        let tuple_1 = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
+        let tuple_multiplied = tuple_1.multiply_by(3.5);
+        assert_eq!(tuple_multiplied, Tuple { x: 3.5, y: -7.0, z: 10.5, w: -14.0 });
     }
 
 }
