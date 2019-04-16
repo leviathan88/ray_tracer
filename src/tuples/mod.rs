@@ -1,4 +1,23 @@
+use std::ops;
+
 use crate::utils::NumberUtils;
+
+type Float = f64;
+
+// #[derive(PartialEq, Debug)]
+// pub struct Vector {
+//     x: Float,
+//     y: Float,
+//     z: Float
+// }
+
+// #[derive(PartialEq, Debug)]
+// pub struct Point {
+//     x: Float,
+//     y: Float,
+//     z: Float
+// }
+
 
 #[derive(PartialEq, Debug)]
 enum TupleType {
@@ -7,18 +26,18 @@ enum TupleType {
     Tuple
 }
 
-#[derive(PartialEq, Debug)]
-struct Tuple {
-    x: f64,
-    y: f64,
-    z: f64,
-    w: f64
+#[derive(PartialEq, Debug, Copy, Clone)]
+pub struct Tuple {
+    pub x: Float,
+    pub y: Float,
+    pub z: Float,
+    pub w: Float
 }
 
 
 impl Tuple {
 
-    pub fn new_vector(x: f64, y: f64, z:f64) -> Self {
+    pub fn new_vector(x: Float, y: Float, z:Float) -> Self {
         Tuple {
             x,
             y,
@@ -27,7 +46,7 @@ impl Tuple {
         }
     }
 
-    pub fn new_point(x: f64, y: f64, z: f64) -> Self {
+    pub fn new_point(x: Float, y: Float, z: Float) -> Self {
         Tuple {
             x,
             y,
@@ -36,7 +55,7 @@ impl Tuple {
         }
     }
 
-    pub fn new_tuple(x: f64, y: f64, z: f64, w: f64) -> Self {
+    pub fn new_tuple(x: Float, y: Float, z: Float, w: Float) -> Self {
         Tuple {
             x,
             y,
@@ -60,24 +79,6 @@ impl Tuple {
         NumberUtils::compare_floats(self.w, tuple.w)
     }
 
-    pub fn add(&self, tuple: &Tuple) -> Tuple {
-        Tuple {
-            x: self.x + tuple.x,
-            y: self.y + tuple.y,
-            z: self.z + tuple.z,
-            w: self.w + tuple.w
-        }
-    }
-
-    pub fn subtract(&self, tuple: &Tuple) -> Self {
-        Tuple {
-            x: self.x - tuple.x,
-            y: self.y - tuple.y,
-            z: self.z - tuple.z,
-            w: self.w - tuple.w
-        }
-    }
-
     pub fn negate(&self) -> Self {
         Tuple {
             x: -self.x,
@@ -90,28 +91,7 @@ impl Tuple {
         }
     }
 
-    pub fn multiply_by(&self, scalar: f64) -> Self {
-        Tuple {
-            x: self.x * scalar,
-            y: self.y * scalar,
-            z: self.z * scalar,
-            w: match self.get_type() {
-                TupleType::Tuple => self.w * scalar,
-                _ => self.w
-            }
-        }
-    }
-
-    pub fn divide_by(&self, scalar: f64) -> Self {
-        Tuple {
-            x: self.x / scalar,
-            y: self.y / scalar,
-            z: self.z / scalar,
-            w: self.w / scalar,
-        }
-    }
-
-    pub fn get_magnitude(&self) -> f64 {
+    pub fn get_magnitude(&self) -> Float {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
     }
 
@@ -120,7 +100,7 @@ impl Tuple {
         Self::new_tuple(self.x / magnitude, self.y / magnitude, self.z / magnitude, self.w / magnitude)
     }
 
-    pub fn calculate_dot_product(&self, tuple: &Tuple) -> f64 {
+    pub fn calculate_dot_product(&self, tuple: &Tuple) -> Float {
         (self.x * tuple.x) + (self.y * tuple.y) + (self.z * tuple.z) + (self.w * tuple.w)
     }
 
@@ -132,6 +112,63 @@ impl Tuple {
         )
     }
 
+}
+
+impl ops::Add<Tuple> for Tuple {
+    type Output = Tuple;
+
+    fn add(self, tuple: Tuple) -> Tuple {
+        Tuple {
+            x: self.x + tuple.x,
+            y: self.y + tuple.y,
+            z: self.z + tuple.z,
+            w: self.w + tuple.w
+        }
+    }
+
+}
+
+impl ops::Sub<Tuple> for Tuple {
+    type Output = Tuple;
+
+    fn sub(self, tuple: Tuple) -> Tuple {
+        Tuple {
+            x: self.x - tuple.x,
+            y: self.y - tuple.y,
+            z: self.z - tuple.z,
+            w: self.w - tuple.w
+        }
+    }
+}
+
+impl ops::Div<Float> for Tuple {
+    type Output = Tuple;
+
+    fn div(self, scalar: Float) -> Tuple {
+        Tuple {
+            x: self.x / scalar,
+            y: self.y / scalar,
+            z: self.z / scalar,
+            w: self.w / scalar,
+        }
+    }
+
+}
+
+impl ops::Mul<Float> for Tuple {
+    type Output = Tuple;
+
+    fn mul(self, scalar: Float) -> Self {
+        Tuple {
+            x: self.x * scalar,
+            y: self.y * scalar,
+            z: self.z * scalar,
+            w: match self.get_type() {
+                TupleType::Tuple => self.w * scalar,
+                _ => self.w
+            }
+        }
+    }
 }
 
 mod tests {
@@ -189,7 +226,7 @@ mod tests {
         let tuple_1 = Tuple::new_point(1.2, 3.2, 2.0);
         let tuple_2 = Tuple::new_vector(1.2, 3.2, 2.000000000000000002);
 
-        let tuple_3 = tuple_1.add(&tuple_2);
+        let tuple_3 = tuple_1 + tuple_2; //tuple_1.add(&tuple_2);
         assert_eq!(tuple_3, Tuple { x: 2.4, y: 6.4, z: 4.0, w: 1.0});
         assert_eq!(tuple_3.get_type(), TupleType::Point);
     }
@@ -199,7 +236,7 @@ mod tests {
         let tuple_1 = Tuple::new_point(3.0, 2.0, 1.0);
         let tuple_2 = Tuple::new_point(5.0, 6.0, 7.0);
 
-        let tuple_3 = tuple_1.subtract(&tuple_2);
+        let tuple_3 = tuple_1 - tuple_2; // tuple_1.subtract(&tuple_2);
 
         assert_eq!(tuple_3, Tuple { x: -2.0, y: -4.0, z: -6.0, w: 0.0});
         assert_eq!(tuple_3.get_type(), TupleType::Vector);
@@ -210,7 +247,7 @@ mod tests {
         let tuple_1 = Tuple::new_point(3.0, 2.0, 1.0);
         let tuple_2 = Tuple::new_vector(5.0, 6.0, 7.0);
 
-        let tuple_3 = tuple_1.subtract(&tuple_2);
+        let tuple_3 = tuple_1 - tuple_2; // tuple_1.subtract(&tuple_2);
 
         assert_eq!(tuple_3, Tuple { x: -2.0, y: -4.0, z: -6.0, w: 1.0});
         assert_eq!(tuple_3.get_type(), TupleType::Point);
@@ -221,7 +258,7 @@ mod tests {
         let tuple_1 = Tuple::new_vector(3.0, 2.0, 1.0);
         let tuple_2 = Tuple::new_vector(5.0, 6.0, 7.0);
 
-        let tuple_3 = tuple_1.subtract(&tuple_2);
+        let tuple_3 = tuple_1 - tuple_2; // tuple_1.subtract(&tuple_2);
 
         assert_eq!(tuple_3, Tuple { x: -2.0, y: -4.0, z: -6.0, w: 0.0});
         assert_eq!(tuple_3.get_type(), TupleType::Vector);
@@ -232,7 +269,7 @@ mod tests {
         let tuple_1 = Tuple::new_vector(0.0, 0.0, 0.0);
         let tuple_2 = Tuple::new_vector(1.0, -2.0, 3.0);
 
-        let tuple_3 = tuple_1.subtract(&tuple_2);
+        let tuple_3 = tuple_1 - tuple_2; // tuple_1.subtract(&tuple_2);
 
         assert_eq!(tuple_3, Tuple { x: -1.0, y: 2.0, z: -3.0, w: 0.0});
         assert_eq!(tuple_3.get_type(), TupleType::Vector);
@@ -250,14 +287,14 @@ mod tests {
     #[test]
     fn test_multiply_by_scalar() {
         let tuple_1 = Tuple::new_tuple(1.0, -2.0, 3.0, -4.0);
-        let tuple_multiplied = tuple_1.multiply_by(3.5);
+        let tuple_multiplied = tuple_1 * 3.5_f64;
         assert_eq!(tuple_multiplied, Tuple { x: 3.5, y: -7.0, z: 10.5, w: -14.0 });
     }
 
     #[test]
     fn test_divide_by_scalar() {
         let tuple_1 = Tuple::new_tuple(1.0, -2.0, 3.0, -4.0);
-        let tuple_divided = tuple_1.divide_by(2.);
+        let tuple_divided = tuple_1 / 2_f64; // tuple_1.divide_by(2.);
         assert_eq!(tuple_divided, Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 });
     }
 
