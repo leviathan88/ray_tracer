@@ -14,4 +14,4 @@ Utils - utility functions for numbers
 ## Progress
 
 ### #1 Canvas Creation (ala Picasso)
-![image info](./image.png)
+![image info](./images/1.png)
