@@ -4,6 +4,10 @@ impl NumberUtils {
     pub fn compare_floats(a: f64, b: f64) -> bool {
         f64::abs(a-b) < 0.00001
     }
+
+    pub fn compare_floats_32(a: f32, b: f32) -> bool {
+        f32::abs(a-b) < 0.00001
+    }
 }
 
 mod tests {
