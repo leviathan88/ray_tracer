@@ -2,25 +2,10 @@ use std::ops;
 
 use crate::utils::NumberUtils;
 
-type Float = f64;
-
-// #[derive(PartialEq, Debug)]
-// pub struct Vector {
-//     x: Float,
-//     y: Float,
-//     z: Float
-// }
-
-// #[derive(PartialEq, Debug)]
-// pub struct Point {
-//     x: Float,
-//     y: Float,
-//     z: Float
-// }
-
+pub type Float = f64;
 
 #[derive(PartialEq, Debug)]
-enum TupleType {
+pub enum TupleType {
     Point,
     Vector,
     Tuple
