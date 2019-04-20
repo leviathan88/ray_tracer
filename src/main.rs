@@ -1,7 +1,11 @@
 mod tuples;
 mod utils;
+mod color;
+mod canvas;
 
 use tuples::{Tuple};
+use canvas::Canvas;
+use color::Color;
 
 fn main() {
     println!("Hello, world!");
@@ -11,7 +15,10 @@ fn main() {
         wind: Tuple::new_vector(-0.01, 0., 0.)
     };
 
-    let mut projectile = Projectile::new(Tuple::new_point(0., 1., 0.), Tuple::new_vector(1., 1., 0.).normalize());
+    let mut projectile = Projectile::new(Tuple::new_point(0., 1., 0.), Tuple::new_vector(1., 1.8, 0.).normalize() * 11.25);
+
+    let mut canvas = Canvas::new(900, 550);
+    let red = Color::red();
 
     loop {
         println!("{:?}", projectile);
@@ -20,8 +27,12 @@ fn main() {
             break;
         }
 
+        canvas.write_pixel_at(projectile.position.x as usize, 550 - projectile.position.y as usize, red);
         projectile = tick(env, projectile);
     }
+
+    canvas.save_to_disk();
+    
 }
 
 // Putting it Together CH 1
