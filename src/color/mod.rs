@@ -1,5 +1,5 @@
 // ? INFO
-// Each piredel on your computer monitor is a composite of three colors: red, green, and blue. 
+// Each pixel on your computer monitor is a composite of three colors: red, green, and blue. 
 // If you take those three colors and mired them in different quantities, you get just about every other color you can imagine
 
 use std::ops;
