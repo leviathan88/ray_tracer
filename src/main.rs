@@ -2,11 +2,12 @@ mod tuples;
 mod utils;
 mod color;
 mod canvas;
+mod matrix;
 
 use tuples::{Tuple};
 use canvas::Canvas;
 use color::Color;
-
+use matrix::Matrix;
 fn main() {
     println!("Hello, world!");
 
@@ -18,7 +19,7 @@ fn main() {
     let mut projectile = Projectile::new(Tuple::new_point(0., 1., 0.), Tuple::new_vector(1., 1.8, 0.).normalize() * 11.25);
 
     let mut canvas = Canvas::new(900, 550);
-    let red = Color::red();
+    let red = Color::white();
 
     loop {
         println!("{:?}", projectile);
@@ -31,8 +32,9 @@ fn main() {
         projectile = tick(env, projectile);
     }
 
-    canvas.save_to_disk();
+    //canvas.save_to_disk();
     
+    let m = Matrix::construct_empty_3x3();
 }
 
 // Putting it Together CH 1
